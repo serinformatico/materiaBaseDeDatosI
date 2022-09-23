@@ -1,0 +1,23 @@
+{
+    "name": "api_rest_node_db1",
+    "version": "1.0.0",
+    "description": "Proyecto de API Rest para la materia Base de datos I - MySQL.",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "watch": "nodemon index.js"
+    },
+    "author": {
+        "name": "Lic. Sergio Regalado Alessi",
+        "email": "regalado.alessi@gmail.com"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "express": "^4.17.1",
+        "express-myconnection": "^1.0.4",
+        "mysql": "^2.18.1"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.16"
+    }
+}

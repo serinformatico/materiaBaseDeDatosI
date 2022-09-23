@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Sergio Regalado Alessi" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <title>Base de datos I</title>
+</head>
+
+<body class="bg-light">
+    <!-- ==================== PANEL: TITULO PPAL. ===================== -->
+    <div class="row shadow py-3 mb-2">
+        <div class="col-md-12">
+            <h1 class="h1 text-black text-center" style="text-shadow: 0.02em 0.02em 0.1em gray">Sistema Web De Base De Datos I</h1>
+        </div>
+    </div>
+
+    <!-- ===================== PANEL: CONTENEDOR ===================== -->
+    <div class="container mt-3" id="container">
+
+        <!-- ===================== PANEL: FORMULARIO ===================== -->
+        <form id="formulario">
+            <div class="row justify-content-center g-3">
+
+                <div class="col-md-4">
+                    <label for="apellido" class="form-label">Apellido</label>
+                    <input type="text" class="form-control form-control-sm" name="apellido" id="apellido" maxlength="30" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control form-control-sm" name="nombre" id="nombre" maxlength="30" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="documento_nro" class="form-label">Nro. de Documento</label>
+                    <input type="number" class="form-control form-control-sm" name="documento_nro" id="documento_nro" minlength="7" maxlength="9" required>
+                </div>
+
+                <!-- ============ BOTONES ============ -->
+                <div class="col-md-12">
+                    <div class="row mt-3">
+                        <div class="col-md-3 offset-md-1 col-lg-2 offset-lg-2 my-1">
+                            <div class="d-grid gap-2"><button type="button" class="btn btn-sm btn-outline-primary" onclick="resetear()">Nuevo Cliente</button></div>
+                        </div>
+                        <div class="col-md-2 col-lg-2 my-1">
+                            <div class="d-grid gap-2"><button type="submit" class="btn btn-sm btn-dark" onclick="guardarCliente(event)">Guardar</button></div>
+                        </div>
+                        <div class="col-md-2 col-lg-2 my-1">
+                            <div class="d-grid gap-2"><button type="button" class="btn btn-sm btn-danger" onclick="eliminarCliente()">Eliminar</button></div>
+                        </div>
+                        <div class="col-md-3 col-lg-2 my-1">
+                            <div class="d-grid gap-2"><button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#listadoModal" onclick="obtenerClientes()">Buscar Cliente</button></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========= SENTENCIA SQL  ======== -->
+                <div class="col-md-12"><p class="text-sm-center text-info" id="sentenciaSQL"></p></div>
+            </div>
+        </form>
+
+        <!-- ==================== PANEL: LISTADO MODAL =================== -->
+        <div class="modal fade" id="listadoModal" tabindex="-1" aria-labelledby="listadoModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="listadoModalLabel">Listado De Clientes</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- ========= BOTONES MODAL ========= -->
+                        <div class="row">
+                            <div class="col-md-4  my-1">
+                                <div class="d-grid gap-2"><input type="text" class="form-control form-control-sm" id="valor_lista_modal"></div>
+                            </div>
+                            <div class="col-md-5  my-1">
+                                <div class="d-grid gap-2">
+                                    <select class="form-select form-select-sm" id="filtro_tabla_modal">
+                                        <option value="id">ID Cliente</option>
+                                        <option selected value="apellido_nombre">Apellido y Nombre</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3  my-1">
+                                <div class="d-grid gap-2"><button type="button" class="btn btn-sm btn-primary" onclick="buscarClientes()">Buscar</button></div>
+                            </div>
+                        </div>
+                        <!-- ========== TABLA MODAL =========== -->
+                        <div class="col-md-12 my-2">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="col">#</th>
+                                            <th class="col">Apellido</th>
+                                            <th class="col">Nombre</th>
+                                            <th class="col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="contenidoTablaModal"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="col-12">
+                            <div class="col-4 offset-4 my-1">
+                                <div class="d-grid gap-2"><button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cerrar</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================= PANEL: FOOTER ======================= -->
+    <div class="footer" id="footer">
+        <footer class="my-5 pt-5 text-muted text-center text-small">
+            <small>Desarrollado por Sergio Regalado Alessi</small><br>
+            <p class="mb-1">&copy; 2017–2021 Todos los Derechos Reservados</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        var cliente_id_seleccionado;
+
+        function obtenerClientes() {
+            fetch('http://localhost:9000/api/clientes', { method: 'GET' })
+                .then((response) => response.json())
+                .then((res) => {
+                    let tableBody       = document.getElementById("contenidoTablaModal");
+                    tableBody.innerHTML = null;
+
+                    document.getElementById("sentenciaSQL").innerHTML  = res.sql;
+                    document.getElementById("valor_lista_modal").value = null;
+
+                    if (res.rows.length > 0) {
+                        res.rows.forEach(element => {
+                            tableBody.innerHTML +=
+                                '<tr id=' + element.id + '>' +
+                                    '<th><p class="text-sm-left fw-light lh-1" id="filtroLista_id' + element.id + '">' + element.id + '</p></th>' +
+                                    '<td><p class="text-sm-left fw-light lh-1" id="filtroLista_apellido_nombre' + element.id + '">' + element.apellido + '</p></td>' +
+                                    '<td><p class="text-sm-left fw-light lh-1" id="filtroLista_apellido_nombre' + element.id + '">' + element.nombre + '</p></td>' +
+                                    '<td class="btn-group">' +
+                                        '<button type="button" class="btn btn-sm btn-dark" id="filtroLista_boton' + element.id + '" onclick="obtenerCliente(' + element.id + ')" data-bs-dismiss="modal">Obtener</button>' +
+                                    '</td>' +
+                                '</tr>';
+                        });
+                    }
+                });
+        }
+
+        function obtenerCliente(id){
+            fetch('http://localhost:9000/api/clientes/' + id, { method: 'GET' })
+                .then((response) => response.json())
+                .then((res) => {
+                    document.getElementById("sentenciaSQL").innerHTML = res.sql;
+
+                    if (res.row) {
+                        cliente_id_seleccionado                        = res.row.id;
+                        document.getElementById("nombre").value        = res.row.nombre;
+                        document.getElementById("apellido").value      = res.row.apellido;
+                        document.getElementById("documento_nro").value = res.row.documento_nro;
+                    }
+                });
+        }
+
+        function buscarClientesPorID(id) {
+            fetch('http://localhost:9000/api/clientes/' + id, { method: 'GET' })
+                .then((response) => response.json())
+                .then((res) => {
+                    let tableBody       = document.getElementById("contenidoTablaModal");
+                    tableBody.innerHTML = null;
+
+                    document.getElementById("sentenciaSQL").innerHTML = res.sql;
+
+                    if (res.row) {
+                        tableBody.innerHTML +=
+                            '<tr id=' + res.row.id + '>' +
+                                '<th><p class="text-sm-left fw-light lh-1" id="filtroLista_id' + res.row.id + '">' + res.row.id + '</p></th>' +
+                                '<td><p class="text-sm-left fw-light lh-1" id="filtroLista_apellido_nombre' + res.row.id + '">' + res.row.apellido + '</p></td>' +
+                                '<td><p class="text-sm-left fw-light lh-1" id="filtroLista_apellido_nombre' + res.row.id + '">' + res.row.nombre + '</p></td>' +
+                                '<td class="btn-group">' +
+                                    '<button type="button" class="btn btn-sm btn-dark" id="filtroLista_boton' + res.row.id + '" onclick="obtenerCliente(' + res.row.id + ')" data-bs-dismiss="modal">Obtener</button>' +
+                                '</td>' +
+                            '</tr>';
+                    }
+                });
+        }
+
+        function buscarClientesPorNombre(apellidoNombre) {
+            fetch('http://localhost:9000/api/clientes/sp/buscar-por-nombre?' + new URLSearchParams({ apellido_nombre: apellidoNombre }), { method: 'GET' })
+                .then((response) => response.json())
+                .then((res) => {
+                    let tableBody       = document.getElementById("contenidoTablaModal");
+                    tableBody.innerHTML = null;
+
+                    document.getElementById("sentenciaSQL").innerHTML = res.sql;
+
+                    if (res.rows.length > 0) {
+                        res.rows.forEach(element => {
+                            tableBody.innerHTML +=
+                                '<tr id=' + element.id + '>' +
+                                    '<th><p class="text-sm-left fw-light lh-1" id="filtroLista_id' + element.id + '">' + element.id + '</p></th>' +
+                                    '<td><p class="text-sm-left fw-light lh-1" id="filtroLista_apellido_nombre' + element.id + '">' + element.apellido + '</p></td>' +
+                                    '<td><p class="text-sm-left fw-light lh-1" id="filtroLista_apellido_nombre' + element.id + '">' + element.nombre + '</p></td>' +
+                                    '<td class="btn-group">' +
+                                        '<button type="button" class="btn btn-sm btn-dark" id="filtroLista_boton' + element.id + '" onclick="obtenerCliente(' + element.id + ')" data-bs-dismiss="modal">Obtener</button>' +
+                                    '</td>' +
+                                '</tr>';
+                        });
+                    }
+                });
+        }
+
+        function buscarClientes() {
+            let filtro = document.getElementById("filtro_tabla_modal").value;
+            let valor  = document.getElementById("valor_lista_modal").value;
+
+            if (filtro === 'id') buscarClientesPorID(valor);
+            if (filtro === 'apellido_nombre') buscarClientesPorNombre(valor);
+        }
+
+        function guardarCliente(event){
+            event.preventDefault();
+            let message = (cliente_id_seleccionado > 0) ? '¿Está seguro que quiere guardar los cambios realizados?' : '¿Está seguro que quiere guardar el nuevo registro?';
+            let method  = (cliente_id_seleccionado > 0) ? 'PUT' : 'POST';
+            let url     = (cliente_id_seleccionado > 0) ? 'http://localhost:9000/api/clientes/' + cliente_id_seleccionado : 'http://localhost:9000/api/clientes';
+
+            if (confirm(message) === true){
+                let data = JSON.stringify({
+                    id: cliente_id_seleccionado,
+                    nombre: document.getElementById("nombre").value,
+                    apellido: document.getElementById("apellido").value,
+                    documento_nro: document.getElementById("documento_nro").value,
+                    ocupacion: '',
+                    hobby: '',
+                });
+
+                fetch(url, { method: method, body: data, headers: { 'content-type': 'application/json' } })
+                    .then((response) => response.json())
+                    .then((res) => {
+                        document.getElementById("sentenciaSQL").innerHTML = res.sql;
+                        cliente_id_seleccionado = (cliente_id_seleccionado > 0) ? cliente_id_seleccionado : res.id;
+                    });
+            }
+        }
+
+        function eliminarCliente(){
+            let message = '¿Está seguro que quiere eliminar el registro?';
+
+            if (confirm(message) === true && cliente_id_seleccionado > 0){
+                fetch('http://localhost:9000/api/clientes/' + cliente_id_seleccionado, { method: 'DELETE' })
+                    .then((response) => response.json())
+                    .then((res) => {
+                        document.getElementById("sentenciaSQL").innerHTML = res.sql;
+                        resetear();
+                    });
+            }
+        }
+
+        function resetear() {
+            cliente_id_seleccionado                            = null;
+            document.getElementById("nombre").value            = null;
+            document.getElementById("apellido").value          = null;
+            document.getElementById("documento_nro").value     = null;
+        }
+    </script>
+</body>
+
+</html>

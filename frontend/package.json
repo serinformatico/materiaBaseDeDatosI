@@ -1,0 +1,10 @@
+{
+    "name": "app_node_db1",
+    "version": "1.0.0",
+    "description": "Proyecto de APP para la materia Base de datos I - MySQL.",
+    "author": {
+        "name": "Lic. Sergio Regalado Alessi",
+        "email": "regalado.alessi@gmail.com"
+    },
+    "license": "MIT"
+}
